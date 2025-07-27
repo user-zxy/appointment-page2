@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预约系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#60A5FA',
+                        accent: '#F97316',
+                        neutral: '#F3F4F6',
+                        dark: '#1F2937',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .form-input-focus {
+                @apply border-primary ring-2 ring-primary/20;
+            }
+            .btn-hover {
+                @apply transform hover:scale-[1.02] hover:shadow-lg transition-all duration-300;
+            }
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-lg">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- 预约表单卡片 -->
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                        <i class="fa fa-calendar-check-o text-3xl text-primary"></i>
+                    </div>
+                    <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-dark">预约系统</h1>
+                    <p class="text-gray-500 mt-2">请填写以下信息进行预约</p>
+                </div>
+                
+                <!-- 预约表单 -->
+                <form id="appointmentForm" class="space-y-5">
+                    <!-- 预约类型 -->
+                    <div>
+                        <label for="appointmentType" class="block text-sm font-medium text-gray-700 mb-1">预约类型</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa fa-tag text-gray-400"></i>
+                            </div>
+                            <select id="appointmentType" name="appointmentType" 
+                                class="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:outline-none focus:form-input-focus transition-all duration-200 appearance-none cursor-pointer">
+                                <option value="" disabled selected>请选择预约类型</option>
+                                <option value="library">图书馆</option>
+                                <option value="classroom">教室</option>
+                                <option value="meetingRoom">会议室</option>
+                                <option value="badmintonCourt">羽毛球场</option>
+                                <option value="basketballCourt">篮球场</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <i class="fa fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
+                        <p class="error-message text-red-500 text-xs mt-1 hidden">请选择预约类型</p>
+                    </div>
+                    
+                    <!-- 学号 -->
+                    <div>
+                        <label for="studentId" class="block text-sm font-medium text-gray-700 mb-1">学号</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa fa-id-card text-gray-400"></i>
+                            </div>
+                            <input type="text" id="studentId" name="studentId" 
+                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:form-input-focus transition-all duration-200"
+                                placeholder="请输入您的学号" required>
+                        </div>
+                        <p class="error-message text-red-500 text-xs mt-1 hidden">请输入有效的学号</p>
+                    </div>
+                    
+                    <!-- 专业 -->
+                    <div>
+                        <label for="major" class="block text-sm font-medium text-gray-700 mb-1">专业</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa fa-book text-gray-400"></i>
+                            </div>
+                            <input type="text" id="major" name="major" 
+                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:form-input-focus transition-all duration-200"
+                                placeholder="请输入您的专业" required>
+                        </div>
+                        <p class="error-message text-red-500 text-xs mt-1 hidden">请输入您的专业</p>
+                    </div>
+                    
+                    <!-- 姓名 -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa fa-user text-gray-400"></i>
+                            </div>
+                            <input type="text" id="name" name="name" 
+                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:form-input-focus transition-all duration-200"
+                                placeholder="请输入您的姓名" required>
+                        </div>
+                        <p class="error-message text-red-500 text-xs mt-1 hidden">请输入您的姓名</p>
+                    </div>
+                    
+                    <!-- 预约时间 -->
+                    <div>
+                        <label for="appointmentTime" class="block text-sm font-medium text-gray-700 mb-1">预约时间</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa fa-clock-o text-gray-400"></i>
+                            </div>
+                            <input type="datetime-local" id="appointmentTime" name="appointmentTime" 
+                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:form-input-focus transition-all duration-200"
+                                required>
+                        </div>
+                        <p class="error-message text-red-500 text-xs mt-1 hidden">请选择有效的预约时间</p>
+                    </div>
+                    
+                    <!-- 预约按钮 -->
+                    <button type="submit" 
+                        class="w-full bg-gradient-primary text-white font-medium py-3 px-4 rounded-lg btn-hover">
+                        <i class="fa fa-check mr-2"></i>提交预约
+                    </button>
+                </form>
+                
+                <!-- 预约须知 -->
+                <div class="mt-8 bg-blue-50 border-l-4 border-primary p-4 rounded-r-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-info-circle text-primary"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-primary">预约须知</h3>
+                            <div class="mt-2 text-sm text-blue-700 space-y-1">
+                                <p>• 请确保填写的信息准确无误</p>
+                                <p>• 预约成功后，您将收到确认邮件</p>
+                                <p>• 如需取消预约，请提前24小时联系</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <p class="text-center text-gray-500 text-sm mt-6">
+            © 2025 预约系统 | 如有疑问，请联系管理员
+        </p>
+    </div>
+
+    <script>
+        // 表单验证
+        const appointmentForm = document.getElementById('appointmentForm');
+        const appointmentTypeInput = document.getElementById('appointmentType');
+        const studentIdInput = document.getElementById('studentId');
+        const majorInput = document.getElementById('major');
+        const nameInput = document.getElementById('name');
+        const appointmentTimeInput = document.getElementById('appointmentTime');
+        
+        const appointmentTypeError = appointmentTypeInput.nextElementSibling;
+        const studentIdError = studentIdInput.nextElementSibling;
+        const majorError = majorInput.nextElementSibling;
+        const nameError = nameInput.nextElementSibling;
+        const appointmentTimeError = appointmentTimeInput.nextElementSibling;
+        
+        appointmentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            // 验证预约类型
+            if (appointmentTypeInput.value === '') {
+                appointmentTypeError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                appointmentTypeError.classList.add('hidden');
+            }
+            
+            // 验证学号 (假设学号为数字或字母组合)
+            const studentIdRegex = /^[a-zA-Z0-9]+$/;
+            if (!studentIdRegex.test(studentIdInput.value) || studentIdInput.value.length < 5) {
+                studentIdError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                studentIdError.classList.add('hidden');
+            }
+            
+            // 验证专业
+            if (majorInput.value.trim() === '') {
+                majorError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                majorError.classList.add('hidden');
+            }
+            
+            // 验证姓名
+            if (nameInput.value.trim() === '') {
+                nameError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                nameError.classList.add('hidden');
+            }
+            
+            // 验证预约时间 (确保选择的是未来时间)
+            const now = new Date();
+            const selectedTime = new Date(appointmentTimeInput.value);
+            if (isNaN(selectedTime.getTime()) || selectedTime <= now) {
+                appointmentTimeError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                appointmentTimeError.classList.add('hidden');
+            }
+            
+            // 如果验证通过，发送数据到API
+            if (isValid) {
+                // 收集表单数据
+                const formData = {
+                    type: appointmentTypeInput.value,
+                    studentId: studentIdInput.value,
+                    major: majorInput.value,
+                    name: nameInput.value,
+                    appointmentTime: appointmentTimeInput.value
+                };
+                
+                // 显示加载状态
+                const submitButton = appointmentForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerHTML;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>提交中...';
+                
+                // 调用API
+                fetch('https://your-api-domain.com/api/appointments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('API响应错误: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API响应:', data);
+                    alert('预约信息提交成功！我们将尽快处理您的预约。');
+                    appointmentForm.reset();
+                    showSuccessMessage();
+                })
+                .catch(error => {
+                    console.error('API调用失败:', error);
+                    alert('提交失败，请稍后再试。错误信息: ' + error.message);
+                })
+                .finally(() => {
+                    // 恢复按钮状态
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalButtonText;
+                });
+            }
+        });
+        
+        // 输入框获得焦点时移除错误提示
+        const inputs = appointmentForm.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                const errorMessage = this.nextElementSibling;
+                if (errorMessage && errorMessage.classList.contains('error-message')) {
+                    errorMessage.classList.add('hidden');
+                }
+            });
+        });
+        
+        // 显示预约成功消息
+        function showSuccessMessage() {
+            // 创建成功消息元素
+            const successMessage = document.createElement('div');
+            successMessage.className = 'fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50';
+            successMessage.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
+                    <div class="text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                            <i class="fa fa-check text-green-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">预约提交成功</h3>
+                        <p class="text-sm text-gray-500 mb-4">
+                            您已成功预约${getAppointmentTypeName()}，预约时间为${formatDateTime(appointmentTimeInput.value)}
+                        </p>
+                        <div class="mt-4">
+                            <button id="closeSuccessBtn" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                                确定
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 添加到页面
+            document.body.appendChild(successMessage);
+            
+            // 关闭按钮事件
+            document.getElementById('closeSuccessBtn').addEventListener('click', function() {
+                const successContainer = this.closest('.fixed');
+                successContainer.querySelector('div').classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    document.body.removeChild(successContainer);
+                }, 300);
+            });
+        }
+        
+        // 获取预约类型名称
+        function getAppointmentTypeName() {
+            const typeMap = {
+                'library': '图书馆',
+                'classroom': '教室',
+                'meetingRoom': '会议室',
+                'badmintonCourt': '羽毛球场',
+                'basketballCourt': '篮球场'
+            };
+            return typeMap[appointmentTypeInput.value] || '未知类型';
+        }
+        
+        // 格式化日期时间
+        function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // 添加输入框动画效果
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('scale-[1.01]');
+                this.parentElement.style.transition = 'all 0.2s ease';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+        
+        // API接口相关功能
+        // 支持通过URL参数预填充表单
+        function prefillFormFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // 预填充预约类型
+            const typeParam = urlParams.get('type');
+            if (typeParam) {
+                appointmentTypeInput.value = typeParam;
+            }
+            
+            // 预填充学号
+            const studentIdParam = urlParams.get('studentId');
+            if (studentIdParam) {
+                studentIdInput.value = studentIdParam;
+            }
+            
+            // 预填充专业
+            const majorParam = urlParams.get('major');
+            if (majorParam) {
+                majorInput.value = majorParam;
+            }
+            
+            // 预填充姓名
+            const nameParam = urlParams.get('name');
+            if (nameParam) {
+                nameInput.value = nameParam;
+            }
+            
+            // 预填充预约时间
+            const timeParam = urlParams.get('time');
+            if (timeParam) {
+                // 确保时间格式正确 (YYYY-MM-DDTHH:MM)
+                if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(timeParam)) {
+                    appointmentTimeInput.value = timeParam;
+                }
+            }
+        }
+        
+        // 页面加载时尝试预填充表单
+        window.addEventListener('load', prefillFormFromUrl);
+    </script>
+</body>
+</html>
+    
